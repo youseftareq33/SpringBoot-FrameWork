@@ -88,6 +88,7 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Grade</th>
+                <th>Operation</th>
             </tr>
 
             <tr th:each="stud: ${al_allStudent}">
@@ -96,8 +97,13 @@
                 </td>
                 <td th:text="*{stud.stud_name}"></td>
                 <td th:text="*{stud.stud_grade}"></td>
+                <td>
+                    <a th:href="@{/deleteStudent(id=${stud.stud_id})}" th:text="Delete"></a>
+                </td>
             </tr>
         </table>
+        <br>
+        <br>
 
         <button onclick="window.location.href='/getAddStudentPage'">Add Student</button>
 

@@ -1,13 +1,18 @@
 package com.first_app.first_app.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.first_app.first_app.Student;
+import com.first_app.first_app.service.StudentService;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -15,71 +20,97 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class StudentController {
+    @Autowired
+    StudentService stud_service;
+
+    @PostConstruct
+    public void init() {
+        stud_service.addStudent(new Student("Yousef", 99));
+        stud_service.addStudent(new Student("Ahmad", 96.2));
+        stud_service.addStudent(new Student("Osama", 96.2));
+    }
+
+
+    // Pages --------------------------------------------------------------
+
 
     // test page
     @GetMapping("/getTestPage")
     public String getTestPage(){
         return "testPage"; // or testPage.html , dosent problem
     }
-    
     //----------------------------------------------------------------------
-    List<Student> al_allStudent=new ArrayList<>();
+    
+    // View all student page
+    @GetMapping("/getAllStudentDetailsPage")
+    public String getAllStudentDetailsPage(Model model) {
+
+        model.addAttribute("al_allStudent", stud_service.getAllStudent());
+
+        return "allStudentDetailsPage";
+    }
+    //----------------------------------------------------------------------
 
     // add student page
     @GetMapping("/getAddStudentPage")
     public String getAddStudentPage(Model model) {
-        Student newStud=new Student();
-        model.addAttribute("addNewStudent", newStud);
+
+        model.addAttribute("addNewStudent", new Student());
+
         return "addStudentPage";
     }
-
-    @PostMapping("/addStudent")
-    public String addStudent(Student stud) {
-        al_allStudent.add(stud);
-        return "redirect:/getAllStudentDetailsPage";
-    }
-
     //----------------------------------------------------------------------
-
-    // all student page
-    @GetMapping("/getAllStudentDetailsPage")
-    public String getAllStudentDetailsPage(Model model) {
-        model.addAttribute("al_allStudent", al_allStudent);
-        return "allStudentDetailsPage";
-    }
-
-    //----------------------------------------------------------------------
-
     // student details page
     @GetMapping("/getStudentDetailsPage")
-    public String getStudentDetailsPage(@RequestParam("id") String studentId, Model model) {
+    public String getStudentDetailsPage(@RequestParam("id") int studentId, Model model) {
 
-        Student student=null;
-        for(int i=0;i<al_allStudent.size();i++){
-            if(al_allStudent.get(i).getStud_id()==Integer.parseInt(studentId)){
-                student=al_allStudent.get(i);
-                break;
-            }
-        }
-       
-        // Add the student to the model
+        Student student=stud_service.getStudentById(studentId);
+        System.out.println(student.toString());
+
         model.addAttribute("student", student);
         return "studentDetailsPage";
     }
+    
 
-    @PostMapping("/updateStudent")
-    public String updateStudent(Student stud) {
 
-        for(int i=0;i<al_allStudent.size();i++){
-            if(al_allStudent.get(i).getStud_id()==stud.getStud_id()){
-                al_allStudent.set(i, stud);
-                break;
-            }
+
+
+    // operations on pages --------------------------------------------------------------
+
+    // add
+    @PostMapping("/addStudent")
+    public String addStudent(@Valid @ModelAttribute("addNewStudent") Student stud, BindingResult result) {
+
+        if(result.hasErrors()){
+            return "addStudentPage";
         }
+
+        stud_service.addStudent(stud);
         return "redirect:/getAllStudentDetailsPage";
     }
 
-    
+
+    // delete
+    @GetMapping("/deleteStudent")
+    public String deleteStudent(@RequestParam("id") int studentId){
+
+        stud_service.deleteStudent(studentId);
+        return "redirect:/getAllStudentDetailsPage";
+    }
+
+
+    // update
+    @PostMapping("/updateStudent")
+    public String updateStudent(@Valid @ModelAttribute("student") Student stud, BindingResult result) {
+
+        if(result.hasErrors()){
+            return "studentDetailsPage";
+        }
+
+        stud_service.updateStudent(stud);
+        return "redirect:/getAllStudentDetailsPage";
+    }
+
     
     
 }
