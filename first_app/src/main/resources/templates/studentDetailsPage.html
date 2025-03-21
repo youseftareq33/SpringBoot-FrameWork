@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details</title>
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+     
+        h1 {
+            color: #333;
+        }
+
+       
+        span {
+            color: #0b9c97;
+            font-weight: bold;
+        }
+
+       
+        table {
+            width: 50%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: #0b9c97;
+            color: white;
+            padding: 12px;
+        }
+
+        td, th {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+       
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+       
+        tr:hover {
+            background-color: #ddd;
+            cursor: pointer;
+        }
+
+        
+        form {
+            width: 40%;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            margin-left: 27px;
+        }
+
+        input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #0b9c97;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0c8783;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Student Details</h1>
+    <br>
+    <br>
+    <!-- in text style-->
+
+    <!-- (th: thyeleaf), the stud_id is private but this call getStudId -->
+    <h1>Id: <span th:text="${student.stud_id}"></span>, Name: <span th:text="${student.stud_name}"></span>, Grade: <span th:text="${student.stud_grade}"></span></h1>  
+
+
+    <!-- in table style-->
+    <!-- <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Grade</th>
+        </tr>
+
+        <tr th:object="${student}">
+            <td th:text="*{stud_id}"></td>
+            <td th:text="*{stud_name}"></td>
+            <td> -->
+                <!-- u can only use if or unless not both -->
+
+                <!-- <p th:if="*{stud_grade<50}">Fail</p> -->
+                <!-- <p th:unless="*{stud_grade>=50}">Pass</p> -->
+<!-- 
+                <p th:text="*{stud_grade >= 50? 'Pass':'Fail'}"></p>
+            </td>
+        </tr>
+    </table> -->
+
+    <form method="Post" th:object="${student}" th:action="@{/updateStudent}">
+        
+        <label for="stud_id">Student ID:</label>
+        <input type="text" placeholder="student id ..." th:field="*{stud_id}" readonly><br><br><br>
+
+        <label for="stud_name">Student Name:</label>
+        <input type="text" placeholder="student name ..." th:field="*{stud_name}">
+        <p style="color: red;" th:errors="*{stud_name}"></p>
+        <br><br><br>
+
+        <label for="stud_grade">Student Grade:</label>
+        <input type="text" placeholder="student grade ..." th:field="*{stud_grade}">
+        <p style="color: red;" th:errors="*{stud_grade}"></p>
+        <br><br><br>
+
+        <input type="submit" value="Update Data">
+    </form>
+    
+</body>
+</html>

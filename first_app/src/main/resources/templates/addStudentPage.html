@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            width: 50%;
+            text-align: center;
+        }
+      
+        h2 {
+            color: #0b9c97;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            background-color: #0b9c97;
+            color: white;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #097c75;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Add Student</h2>
+
+        <form method="post" th:object="${addNewStudent}" th:action="@{/addStudent}">
+            <label for="stud_name">Student Name:</label>
+            <input type="text" placeholder="Enter student name..." th:field="*{stud_name}">
+            <p style="color: red;" th:errors="*{stud_name}"></p>
+
+            <label for="stud_grade">Student Grade:</label>
+            <input type="text" placeholder="Enter student grade..." th:field="*{stud_grade}">
+            <p style="color: red;" th:errors="*{stud_grade}"></p>
+
+            <input type="submit" value="Add Student">
+        </form>
+    </div>
+    
+</body>
+</html>
